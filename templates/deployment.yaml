@@ -21,11 +21,6 @@ spec:
       imagePullSecrets: {{ .Values.imagePullSecrets  }}
       containers:
         - image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-          command: 
-            - "/bin/sh"
-            - "-c" {{ if eq .Values.terraria.generateNewWorld true }}
-            - "cd /terraria-server && ./bootstrap.sh -world /root/.local/share/Terraria/Worlds/{{ .Values.terraria.worldName | replace " " "_" }}.wld -autocreate {{ .Values.terraria.worldGenerationParameters.size }}" {{ else }}
-            - "cd /terraria-server && ./bootstrap.sh" {{ end }}
           imagePullPolicy: {{ .Values.image.imagePullPolicy }}
           name: terraria
           stdin: true
@@ -43,6 +38,9 @@ spec:
             - name: vol-terraria-{{ $key }}
               mountPath: {{ .mountPath }}{{ if .subPath }}
               subPath: {{ .subPath }} {{ end }} {{ end }}
+            - name:  vol-terraria-serversettings
+              mountPath: /config/serversettings.txt
+              subPath: serversettings.txt
           resources: {{ if .Values.resources }}{{ range $key, $value := .Values.resources }}
             {{$key}}: {{ $value }} {{ end }} {{ end }}
       volumes: {{ range $key, $value := .Values.persistence }}
@@ -50,4 +48,7 @@ spec:
           persistentVolumeClaim: {{ if $value.existingPersistentVolumeClaim  }}
             claimName: {{ $value.existingPersistentVolumeClaim }} {{ else }}
             claimName: pvc-terraria-{{ $key }}-{{ $RELEASE_NAME }} {{ end }}{{ end }}
+        - name: vol-terraria-serversettings
+          configMap:
+            name: configmap-terraria-serversettings-{{ .Release.Name }}
 
