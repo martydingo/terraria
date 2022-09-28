@@ -1,0 +1,76 @@
+# Default values for terraria.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+terraria:
+  generateNewWorld: false
+  worldName: "The Enclosure of Cats"
+  worldGenerationParameters:
+  # 1=Small, 2=Medium, 3=Large
+    size: 3
+    
+
+persistence:
+  config:
+    enabled: true
+    mountPath: /config
+    subpath: 
+    existingPersistentVolumeClaim:
+    persistentVolumeClaim:
+      storageClassName: "~"
+      storageSize: 1Gi
+  logs:
+    enabled: true
+    mountPath: /terraria-server/logs
+    subpath: 
+    existingPersistentVolumeClaim:
+    persistentVolumeClaim:
+      storageClassName: "~"
+      storageSize: 1Gi
+  worlds:
+    enabled: true
+    mountPath: /root/.local/share/Terraria/Worlds
+    subpath: 
+    existingPersistentVolumeClaim:
+    persistentVolumeClaim:
+      storageClassName: "~"
+      storageSize: 1Gi
+
+env:
+  WORLD_FILENAME: "The_Enclosure_of_Cats.wld"
+
+replicaCount: 1
+
+image:
+  repository: ryshe/terraria
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "vanilla-1.4.4"
+
+imagePullSecrets: []
+
+securityContext: 
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  runAsNonRoot: false
+  runAsUser: 0
+
+service:
+  type: LoadBalancer
+  loadBalancerIP: ""
+  ipFamilyPolicy: PreferDualStack
+  port: 7777
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi

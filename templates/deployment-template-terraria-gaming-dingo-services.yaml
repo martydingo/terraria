@@ -1,0 +1,53 @@
+{{- $RELEASE_NAME := .Release.Name -}}
+{{- $RELEASE_NAMESPACE := .Release.Namespace -}}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: terraria-{{ $RELEASE_NAME }}
+  namespace: {{ $RELEASE_NAMESPACE }}
+  labels:
+    app: terraria-{{ $RELEASE_NAME }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: terraria-{{ $RELEASE_NAME }}
+  template:
+    metadata:
+      labels:
+        app: terraria-{{ $RELEASE_NAME }}
+    spec:
+      imagePullSecrets: {{ .Values.imagePullSecrets  }}
+      containers:
+        - image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          command: 
+            - "/bin/sh"
+            - "-c" {{ if eq .Values.terraria.generateNewWorld true }}
+            - "bootstrap.sh -world /root/.local/share/Terraria/Worlds/{{ .Values.terraria.worldName | replace " " "_" }}.wld -autocreate {{ .Values.terraria.worldGenerationParameters.size }}" {{ else }}
+            - "bootstrap.sh" {{ end }}
+          imagePullPolicy: {{ .Values.image.imagePullPolicy }}
+          name: terraria
+          stdin: true
+          tty: true
+          securityContext: {{ range $key, $value := .Values.securityContext }}
+            {{ $key }}: {{ $value }}{{ end }}
+          env: {{ range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ $value }}{{ end }}
+          ports:
+            - containerPort: 7777
+              protocol: TCP
+              name: terraria
+          volumeMounts: {{ range $key, $value := .Values.persistence }}
+            - name: vol-terraria-{{ $key }}
+              mountPath: {{ .mountPath }}{{ if .subPath }}
+              subPath: {{ .subPath }} {{ end }} {{ end }}
+          resources: {{ if .Values.resources }}{{ range $key, $value := .Values.resources }}
+            {{$key}}: {{ $value }} {{ end }} {{ end }}
+      volumes: {{ range $key, $value := .Values.persistence }}
+        - name: vol-terraria-{{ $key }}
+          persistentVolumeClaim: {{ if $value.existingPersistentVolumeClaim  }}
+            claimName: {{ $value.existingPersistentVolumeClaim }} {{ else }}
+            claimName: pvc-terraria-{{ $key }}-{{ $RELEASE_NAME }} {{ end }}{{ end }}
+
