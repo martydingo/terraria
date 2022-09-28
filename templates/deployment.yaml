@@ -24,8 +24,8 @@ spec:
           command: 
             - "/bin/sh"
             - "-c" {{ if eq .Values.terraria.generateNewWorld true }}
-            - "bootstrap.sh -world /root/.local/share/Terraria/Worlds/{{ .Values.terraria.worldName | replace " " "_" }}.wld -autocreate {{ .Values.terraria.worldGenerationParameters.size }}" {{ else }}
-            - "bootstrap.sh" {{ end }}
+            - "cd /terraria-server && ./bootstrap.sh -world /root/.local/share/Terraria/Worlds/{{ .Values.terraria.worldName | replace " " "_" }}.wld -autocreate {{ .Values.terraria.worldGenerationParameters.size }}" {{ else }}
+            - "cd /terraria-server && ./bootstrap.sh" {{ end }}
           imagePullPolicy: {{ .Values.image.imagePullPolicy }}
           name: terraria
           stdin: true

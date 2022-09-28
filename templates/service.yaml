@@ -5,8 +5,8 @@ metadata:
   namespace: {{ .Release.Namespace }}
   annotations:
     meta.helm.sh/release-name: terraria-{{ .Release.Name }}
-    meta.helm.sh/release-namespace: {{ .Release.Namespace }}{{ if .Values.service.annotations }}
-    {{ range $key, $value := .Values.service.annotations }}{{ $key }}: {{ $value | quote }}{{ end }}{{ end }}
+    meta.helm.sh/release-namespace: {{ .Release.Namespace }} {{ if .Values.service.annotations }}
+    {{ range $key, $value := .Values.service.annotations }}{{ $key }}: {{ $value | quote }}{{ end }} {{ end }}
   labels:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: terraria
