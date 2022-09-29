@@ -102,9 +102,10 @@ replicaCount: 1
 
 image:
   repository: ryshe/terraria
-  pullPolicy: IfNotPresent
+  imagePullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "vanilla-1.4.4"
+  # See https://hub.docker.com/r/ryshe/terraria/tags for different versions/tshock variants
+  tag: "vanilla-latest"
 
 imagePullSecrets: []
 
