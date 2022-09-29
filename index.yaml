@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  terraria:
+  - apiVersion: v2
+    appVersion: 1.4.4
+    created: "2022-09-28T21:07:47.254880837+01:00"
+    description: A Helm chart for Terraria
+    digest: 33ce3d70e2a9f23a5a7e0c973b50c90ddf9aa04033543786153bd52824896c97
+    name: terraria
+    type: application
+    urls:
+    - https://martydingo.github.io/terraria/terraria-1.0.0.tgz
+    version: 1.0.0
+generated: "2022-09-28T21:07:47.253706223+01:00"

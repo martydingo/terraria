@@ -1,1 +1,1 @@
-# terraria
+# Terraria Helm Chart

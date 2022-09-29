@@ -106,7 +106,6 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   # See https://hub.docker.com/r/ryshe/terraria/tags for different versions/tshock variants
   tag: "vanilla-latest"
-
 imagePullSecrets: []
 
 securityContext: 
